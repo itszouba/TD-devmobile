@@ -1,0 +1,42 @@
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+public class HomeActivity extends AppCompatActivity implements TaskAdapter.OnTaskClickListener {
+
+    private RecyclerView recyclerView;
+    private Button newTaskButton;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home);
+
+        recyclerView = findViewById(R.id.recyclerView);
+        newTaskButton = findViewById(R.id.buttonNewTask);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        taskAdapter = new TaskAdapter(this);
+        recyclerView.setAdapter(taskAdapter);
+
+        newTaskButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, AddTaskActivity.class);
+                startActivity(intent);
+            }
+        });
+  }
+
+    @Override
+    public void onTaskClick(Task task) {
+        Intent intent = new Intent(HomeActivity.this, UpdateTaskActivity.class);
+        intent.putExtra("taskId", task.getId());
+        intent.putExtra("taskTitle", task.getTitle());
+        intent.putExtra("taskDescription", task.getDescription());
+        startActivity(intent);
+    }
+}
